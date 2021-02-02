@@ -11,7 +11,7 @@ function Layout(): JSX.Element {
 						<h1>Welcome to am-pm grocery store</h1>
             <h3>This is the place to find all your food products</h3>
             <nav>
-                <NavLink to="/products">products list</NavLink>
+                <NavLink to="/products">products list </NavLink>
                 <span> | </span>
                 <NavLink to="/add-product">Add products</NavLink>
             </nav>
