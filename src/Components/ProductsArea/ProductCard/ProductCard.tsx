@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import ProductsModel from "../Models/ProductsModel";
 import "./ProductCard.css";
 
@@ -19,6 +20,7 @@ function ProductCard(props: ProductsCardProps): JSX.Element {
       {new Date(props.singleProduct.expirationDate).toLocaleTimeString()}
       <br />
       Price: {props.singleProduct.price}$ <br />
+      <NavLink to={"/products/details/" + props.singleProduct.productId}> delete product </NavLink>
     </div>
   );
 }

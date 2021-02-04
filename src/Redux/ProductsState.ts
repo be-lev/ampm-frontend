@@ -6,7 +6,8 @@ export class ProductsState {
 
 export enum ProductsActionType {
     ProductsDownloaded,
-    ProductAdded
+    ProductAdded,
+    ProductDeleted = "ProductDeleted"
 }
 
 export interface ProductsAction {
@@ -22,6 +23,7 @@ export function productAddedAction(product: ProductModel): ProductsAction {
     return { type: ProductsActionType.ProductAdded, payload: product }
 }
 
+
 export function productReducer(currentState: ProductsState = new ProductsState(), action: ProductsAction): ProductsState {
     const newState = { ...currentState };
 
@@ -32,6 +34,10 @@ export function productReducer(currentState: ProductsState = new ProductsState()
             break;
         case ProductsActionType.ProductAdded:
             newState.products.push(action.payload);
+            break;
+        case ProductsActionType.ProductDeleted:
+            const indexToDelete = newState.products.findIndex(p => p.productId === action.payload); // payload = the deleted product's id
+            newState.products.splice(indexToDelete, 1);
             break;
     }
     return newState;

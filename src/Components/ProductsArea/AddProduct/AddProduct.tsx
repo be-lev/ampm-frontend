@@ -24,7 +24,6 @@ function AddProducts(): JSX.Element {
       const categories = response.data;
       setCategories(categories);
     })();
-    //! ask Assaf about this error
   }, []);
 
   const { register, handleSubmit } = useForm<ProductModel>();
@@ -36,7 +35,6 @@ function AddProducts(): JSX.Element {
         product
       );
       const addedProduct = response.data;
-      console.log(addedProduct);
       const action = productAddedAction(addedProduct);
       store.dispatch(action);
       alert(
