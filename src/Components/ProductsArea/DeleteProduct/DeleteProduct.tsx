@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {NavLink, RouteComponentProps } from "react-router-dom";
 import ProductModel from "../Models/ProductsModel";
 import { History } from "history";
-import "./Details.css";
+
 import store from "../../../Redux/store";
 import axios from "axios";
 import { ProductsActionType } from "../../../Redux/ProductsState";
@@ -25,8 +25,9 @@ class Details extends Component<DetailsProps, DetailsState> {
         super(props)
 
         const id= +this.props.match.params.prodId;
-        const product = store.getState().productReducer.products.find(p=> p.productId === id)
-        this.state={product}
+        console.log("id: " +id);
+        this.state={product: store.getState().productReducer.products.find(p=> p.productId === id)}
+        console.log(this.state);
     }
 
     private deleteProduct = async () => {

@@ -7,7 +7,7 @@ import {
   Switch,
 } from "react-router-dom";
 import AddProduct from "../../ProductsArea/AddProduct/AddProduct";
-import Details from "../../ProductsArea/Details/Details";
+import DeleteProduct from "../../ProductsArea/DeleteProduct/DeleteProduct";
 import ProductsList from "../../ProductsArea/ProductsList/ProductsList";
 import "./Layout.css";
 
@@ -27,7 +27,7 @@ function Layout(): JSX.Element {
         <Switch>
           <Route path="/products" component={ProductsList} exact />
           <Route path="/add-product" component={AddProduct} exact />
-          <Route path="/products/details/:prodId" component={Details} exact />
+          <Route path="/products/details/:prodId" component={DeleteProduct} exact />
           <Redirect from="/" to="/products" exact />
         </Switch>
       </div>
