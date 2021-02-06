@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import {NavLink, RouteComponentProps } from "react-router-dom";
 import ProductModel from "../Models/ProductsModel";
 import { History } from "history";
-
 import store from "../../../Redux/store";
 import axios from "axios";
 import { ProductsActionType } from "../../../Redux/ProductsState";
+import { $CombinedState } from "redux";
 
 interface MatchParams{
     prodId: string;
@@ -25,12 +25,15 @@ class Details extends Component<DetailsProps, DetailsState> {
         super(props)
 
         const id= +this.props.match.params.prodId;
-        console.log("id: " +id);
-        this.state={product: store.getState().productReducer.products.find(p=> p.productId === id)}
-        console.log(this.state);
+        // const product = store.getState().productReducer.products.find(p=> p.productId === id)
+        const product = store.getState().products.find(p=> p.productId === id)
+        // console.log(product.name);
+        this.state={ product }
+    
+        
     }
 
-    private deleteProduct = async () => {
+    public deleteProduct = async () => {
         const answer = window.confirm("are you sure?");
         if(!answer) return;
         await axios.delete<ProductModel>("http://localhost:3003/api/products/"+ this.state.product.productId);
@@ -41,6 +44,7 @@ class Details extends Component<DetailsProps, DetailsState> {
     public render(): JSX.Element {
         return (
             <div className="Details">
+          
 				    {this.state.product &&
                     <>
                         <h2>Product Details:</h2>

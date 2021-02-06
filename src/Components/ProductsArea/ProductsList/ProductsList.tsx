@@ -17,39 +17,67 @@ class ProductsList extends Component<{}, ProductsListState> {
     super(props);
 
     this.state = {
-      products: store.getState().productReducer.products,
-      categories: store.getState().categoryReducer.categories,
-      selectedCategory: "",
+    //   products: store.getState().productReducer.products,
+      products: store.getState().products,
+      categories: [],
+      selectedCategory: ""
     };
-    console.log(this.state.products.map((p)=>(p.name)));
+    
   }
 
   public async componentDidMount() {
-    try {
-      if (store.getState().productReducer.products.length === 0) {
-        console.log("(Going to server...)");
-        const response = await axios.get<ProductModel[]>(
-          "http://localhost:3003/api/products"
-        );
-        const CategoryResponse = await axios.get<CategoryModel[]>(
-          "http://localhost:3003/api/products/categories"
-        );
+     
+    Promise.all(
+        [
+        axios.get<ProductModel[]>("http://localhost:3003/api/products"),
+        axios.get<CategoryModel[]>("http://localhost:3003/api/products/categories")
+    ]
+    )
+    .then(([productsResponse ,CategoryResponse ])=>{
+        if(!store.getState().products.length || !this.state.categories.length){
+        console.log("going to server...");
+        const productsAction = productsDownloadedAction(productsResponse.data);
+        store.dispatch(productsAction);
+        // this.setState({ products: store.getState().productReducer.products });
+        this.setState({ products: store.getState().products });
 
-        const action = productsDownloadedAction(response.data);
-        store.dispatch(action);
-        this.setState({ products: store.getState().productReducer.products });
+        // const categoryAction = categoriesDownloadedAction(CategoryResponse.data);
+        // store.dispatch(categoryAction);
+        // this.setState({ categories: store.getState().categoryReducer.categories});
 
-        const categoryAction = categoriesDownloadedAction(CategoryResponse.data);
-        store.dispatch(categoryAction);
-        this.setState({ categories: store.getState().categoryReducer.categories});
-    }
-    } catch (err) {
-      console.log(err);
-      alert("Error");
-    }
+        const categories = CategoryResponse.data
+
+        this.setState({ products: store.getState().products , categories});
+    }}).catch(err => console.log(err.message));
+    
+    // try {
+     
+    //     console.log("(Going to server...)");
+    //     const response = await axios.get<ProductModel[]>(
+    //       "http://localhost:3003/api/products"
+    //     );
+    //     const CategoryResponse = await axios.get<CategoryModel[]>(
+    //       "http://localhost:3003/api/products/categories"
+    //     );
+
+    //     const action = productsDownloadedAction(response.data);
+    //     store.dispatch(action);
+    //     this.setState({ products: store.getState().productReducer.products });
+
+    //     const categoryAction = categoriesDownloadedAction(CategoryResponse.data);
+    //     store.dispatch(categoryAction);
+    //     this.setState({ categories: store.getState().categoryReducer.categories});
+    
+    // } catch (err) {
+    //   console.log(err);
+    //   alert("Error");
+    // }
+
+
   }
 
   private selectCategoryId = (args: SyntheticEvent) => {
+    console.log("this calsol is not logging"+ this.state.products.map((p)=>(p.name)) + "this shit"  );
     const selectedCategory = (args.target as HTMLSelectElement).value;
     this.setState({ selectedCategory });
   };
