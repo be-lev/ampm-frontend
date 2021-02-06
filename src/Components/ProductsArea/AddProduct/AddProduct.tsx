@@ -12,12 +12,14 @@ function AddProducts(): JSX.Element {
   const history = useHistory();
 
   //TODO: change to new react format
-  const categoriesStateArray = useState<CategoryModel[]>([]);
-  const categories = categoriesStateArray[0];
-  const setCategories = categoriesStateArray[1];
+//   const categoriesStateArray = useState<CategoryModel[]>([]);
+//   const categories = categoriesStateArray[0];
+//   const setCategories = categoriesStateArray[1];
+
+  const [categories, setCategories] = useState<CategoryModel[]>([]);
 
   useEffect(() => {
-    (async function () {
+    (async () => {
       const response = await axios.get<CategoryModel[]>(
         "http://localhost:3003/api/products/categories"
       );

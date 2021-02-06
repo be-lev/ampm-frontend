@@ -5,7 +5,6 @@ import { History } from "history";
 import store from "../../../Redux/store";
 import axios from "axios";
 import { ProductsActionType } from "../../../Redux/ProductsState";
-import { $CombinedState } from "redux";
 
 interface MatchParams{
     prodId: string;
@@ -23,14 +22,9 @@ class Details extends Component<DetailsProps, DetailsState> {
 
     public constructor(props: DetailsProps){
         super(props)
-
         const id= +this.props.match.params.prodId;
-        // const product = store.getState().productReducer.products.find(p=> p.productId === id)
         const product = store.getState().products.find(p=> p.productId === id)
-        // console.log(product.name);
-        this.state={ product }
-    
-        
+        this.state={ product }   
     }
 
     public deleteProduct = async () => {
@@ -56,7 +50,7 @@ class Details extends Component<DetailsProps, DetailsState> {
                         <br /> <br />
                         <NavLink to="/products">Back to List</NavLink>
                         <span> | </span>
-                        <a href="#" onClick={this.deleteProduct}>Delete product</a>
+                        <button onClick={this.deleteProduct} style={{border:"none",margin:"0",padding:"0",width:"auto",overflow:"visible",background:"transparent",font:"inherit",lineHeight: "normal",color: "aqua"}}>Delete product</button>
                     </>
                 }
             </div>
