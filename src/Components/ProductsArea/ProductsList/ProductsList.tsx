@@ -37,11 +37,9 @@ class ProductsList extends Component<{}, ProductsListState> {
             );
             store.dispatch(productsAction);
             const categories = CategoryResponse.data;
-            const {selectedCategory} = this.state;
             this.setState({
               products: store.getState().products,
-              categories,
-              selectedCategory,
+              categories 
             });
           }
       )
@@ -56,17 +54,16 @@ class ProductsList extends Component<{}, ProductsListState> {
           "http://localhost:3003/api/products/products-by-category/" +
             this.state.selectedCategory);
         const productsByCategory = productsByCategoryResponse.data;
-        const {selectedCategory} = this.state;
-        this.setState({ productsByCategory, selectedCategory });
-      
-    } catch (err) {
+        this.setState({ productsByCategory });
+    } 
+      catch (err) {
       console.log(err);
       alert("Error");
     }
 }
   }
 
-  private selectCategoryId = async (args: SyntheticEvent) => {
+  private handleSelectedCategory = async (args: SyntheticEvent) => {
     const selectedCategory = (args.target as HTMLSelectElement).value;
     await this.setState({ selectedCategory });
   };
@@ -81,12 +78,11 @@ class ProductsList extends Component<{}, ProductsListState> {
     return (
       <div className="ProductsList">
         <h2>Products list</h2>
-        <label>Select products by categories: </label>
+        <label>Select products by category: </label>
         <select
           name="categoryName"
           defaultValue="0"
-          onChange={this.selectCategoryId}>
-
+          onChange={this.handleSelectedCategory}>
           <option value="0">
             All products
           </option>
@@ -95,9 +91,9 @@ class ProductsList extends Component<{}, ProductsListState> {
               {c.categoryName}
             </option>
           ))}
-
         </select>
         <br/>
+
         {productsToShow.map((p) => (
           <ProductCard key={p.productId} singleProduct={p} />
         ))}
