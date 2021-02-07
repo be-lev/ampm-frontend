@@ -6,14 +6,13 @@ import ProductCard from "../ProductCard/ProductCard";
 import ProductModel from "../Models/ProductsModel";
 import CategoryModel from "../Models/CategoryModel";
 
+interface ProductsListProps{}
 interface ProductsListState {
   products: ProductModel[];
   categories: CategoryModel[];
   selectedCategory: string;
   productsByCategory: ProductModel[];
 }
-
-interface ProductsListProps {}
 class ProductsList extends Component<{}, ProductsListState> {
   public constructor(props: {}) {
     super(props);
@@ -27,8 +26,7 @@ class ProductsList extends Component<{}, ProductsListState> {
 
   public async componentDidMount() {
     if (!store.getState().products.length ||
-        !this.state.categories.length
-      ) {
+        !this.state.categories.length){
     Promise.all([
       axios.get<ProductModel[]>("http://localhost:3003/api/products"),
       axios.get<CategoryModel[]>("http://localhost:3003/api/products/categories")
@@ -51,23 +49,21 @@ class ProductsList extends Component<{}, ProductsListState> {
     }
   }
 
-  public async componentDidUpdate(
-    prevProps: ProductsListProps,
-    prevState: ProductsListState
-  ) {
+  public async componentDidUpdate(prevProps:ProductsListProps, prevState:ProductsListState){
+    if(this.state.selectedCategory !== prevState.selectedCategory){
     try {
-      if (this.state.selectedCategory !== prevState.selectedCategory) {
         const productsByCategoryResponse = await axios.get<ProductModel[]>(
           "http://localhost:3003/api/products/products-by-category/" +
             this.state.selectedCategory);
         const productsByCategory = productsByCategoryResponse.data;
         const {selectedCategory} = this.state;
         this.setState({ productsByCategory, selectedCategory });
-      }
+      
     } catch (err) {
       console.log(err);
       alert("Error");
     }
+}
   }
 
   private selectCategoryId = async (args: SyntheticEvent) => {
@@ -76,31 +72,33 @@ class ProductsList extends Component<{}, ProductsListState> {
   };
 
   public render(): JSX.Element {
+    let productsToShow = [];
+    if(this.state.selectedCategory !== "0" ){
+        productsToShow = this.state.productsByCategory;
+    } else {
+        productsToShow = this.state.products;
+    }
     return (
       <div className="ProductsList">
         <h2>Products list</h2>
-        {this.state.products.map((p) => (
-          <ProductCard key={p.productId} singleProduct={p} />
-        ))}
-        <br />
-        <label>Select products by </label>
+        <label>Select products by categories: </label>
         <select
           name="categoryName"
           defaultValue="0"
-          onChange={this.selectCategoryId}
-        >
-          <option disabled value="0">
-            Categories
-          </option>
+          onChange={this.selectCategoryId}>
 
+          <option value="0">
+            All products
+          </option>
           {this.state.categories.map((c) => (
             <option key={c.categoryId} value={c.categoryName}>
               {c.categoryName}
             </option>
           ))}
+
         </select>
-        <h3>Products by category</h3>
-        {this.state.productsByCategory.map((p) => (
+        <br/>
+        {productsToShow.map((p) => (
           <ProductCard key={p.productId} singleProduct={p} />
         ))}
       </div>
